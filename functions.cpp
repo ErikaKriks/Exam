@@ -4,6 +4,7 @@
 #include <sstream>
 #include <cctype>
 #include <map>
+#include <regex>
 
 // Function to clean and process a word
 std::string cleanWord(const std::string &word) {
@@ -14,21 +15,6 @@ std::string cleanWord(const std::string &word) {
         }
     }
     return cleaned;
-}
-
-void writeWordCountToFile(const std::map<std::string, int> &wordCount, const std::string &filename) {
-    std::ofstream outputFile(filename);
-    if (outputFile.is_open()) {
-        for (const auto &pair : wordCount) {
-            if (pair.second > 1) { // Words repeated more than once
-                outputFile << pair.first << ": " << pair.second << std::endl;
-            }
-        }
-        outputFile.close();
-        std::cout << "Output written to file '" << filename << "'" << std::endl;
-    } else {
-        std::cerr << "Unable to open output file!" << std::endl;
-    }
 }
 
 void processLine(const std::string &line, int lineNumber, std::map<std::string, std::vector<std::pair<int, int>>> &wordLocations) {
@@ -130,4 +116,29 @@ void printWordCountToFile(const std::map<std::string, int> &wordCount, const std
     } else {
         std::cerr << "Unable to open output file!" << std::endl;
     }
+}
+
+void extractAndWriteURLsToFile(const std::string &inputFile, const std::string &outputFile) {
+    std::ifstream ifs(inputFile); // Input file stream
+    std::ofstream ofs(outputFile); // Output file stream
+
+    if (!ifs.is_open() || !ofs.is_open()) {
+        std::cerr << "Unable to open input or output file!" << std::endl;
+        return;
+    }
+
+    std::string text((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+    std::regex urlRegex(R"(\b(?:https?|ftp):\/\/\S+\b|\b(?:www\.\S+\.\w{2,})\b)");
+
+    std::smatch matches;
+    std::string::const_iterator searchStart(text.cbegin());
+
+    while (std::regex_search(searchStart, text.cend(), matches, urlRegex)) {
+        for (auto &match : matches) {
+            ofs << "Found URL: " << match << std::endl;
+        }
+        searchStart = matches.suffix().first;
+    }
+
+    std::cout << "URLs extracted and written to '" << outputFile << "'" << std::endl;
 }
