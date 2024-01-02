@@ -26,18 +26,6 @@ int main() {
         inputFile.close();
 
        writeWordCountToFile(wordCount, "output.txt");
-        // std::ofstream outputFile("output.txt"); // Output file to store word count
-        // if (outputFile.is_open()) {
-        //     for (const auto &pair : wordCount) {
-        //         if (pair.second > 1) { // Words repeated more than once
-        //             outputFile << pair.first << ": " << pair.second << std::endl;
-        //         }
-        //     }
-        //     outputFile.close();
-        //     std::cout << "Output written to file 'output.txt'" << std::endl;
-        // } else {
-        //     std::cerr << "Unable to open output file!" << std::endl;
-        // }
     } else {
         std::cerr << "Unable to open input file!" << std::endl;
     }
