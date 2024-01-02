@@ -16,7 +16,7 @@ int main() {
     if (inputFile.is_open()) {
         std::string line;
         int lineNumber = 1;
-        
+
        while (std::getline(inputFile, line)) {
             std::istringstream iss(line);
             std::string word;
@@ -40,6 +40,8 @@ int main() {
     } else {
         std::cerr << "Unable to open input file!" << std::endl;
     }
+
+    extractAndWriteURLsToFile("text.txt", "urls.txt");
 
     return 0;
 }
