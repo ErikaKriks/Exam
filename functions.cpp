@@ -52,6 +52,7 @@ void processLine(const std::string &line, int lineNumber, std::map<std::string, 
     }
 }
 
+// For debugging
 void printCrossReference(const std::map<std::string, std::vector<std::pair<int, int>>> &wordLocations) {
     for (const auto &word : wordLocations) {
         std::cout << "Word: " << word.first << std::endl;
@@ -96,6 +97,36 @@ void printCrossReferenceToFile(const std::map<std::string, std::vector<std::pair
         outputFile << std::setw(longestWordLength + 2 + 15) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
 
         std::cout << "Cross-reference written to file '" << filename << "'" << std::endl;
+    } else {
+        std::cerr << "Unable to open output file!" << std::endl;
+    }
+}
+
+void printWordCountToFile(const std::map<std::string, int> &wordCount, const std::string &filename) {
+    std::ofstream outputFile(filename);
+    if (outputFile.is_open()) {
+        int longestWordLength = 0; // Track the length of the longest word
+        for (const auto &pair : wordCount) {
+            if (pair.first.length() > longestWordLength) {
+                longestWordLength = static_cast<int>(pair.first.length());
+            }
+        }
+
+        // Print the table header
+        outputFile << std::setw(longestWordLength + 2) << std::left << "Word" << " | Count" << std::endl;
+        outputFile << std::setw(longestWordLength + 2 + 10) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+
+        // Print word counts in a table
+        for (const auto &pair : wordCount) {
+            if (pair.second > 1) { // Words repeated more than once
+                outputFile << std::setw(longestWordLength + 2) << std::left << pair.first << " | " << pair.second << std::endl;
+            }
+        }
+
+        // Print the table footer
+        outputFile << std::setw(longestWordLength + 2 + 10) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+
+        std::cout << "Output written to file '" << filename << "'" << std::endl;
     } else {
         std::cerr << "Unable to open output file!" << std::endl;
     }
