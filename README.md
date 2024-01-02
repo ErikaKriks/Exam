@@ -2,7 +2,7 @@
 
 This project aims to provide insights into the frequency and context of word occurrences in a text file, while also identifying and capturing URLs present in the text data.
 
-Text used for the task is taken from the
+Text used for the task is generated from Lrem Ipsum and random URLs.
 
 ## Features
 * Word counting and tracking word occurrences. (Output file: output_table.txt)
@@ -14,7 +14,7 @@ Text used for the task is taken from the
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/your-username/your-repository.git
+   git clone https://github.com/ErikaKriks/Exam.git
 
 2. **Open project in Visual Studio Code**
 3. **Install C/C++ Extension**
