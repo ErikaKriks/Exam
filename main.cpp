@@ -37,11 +37,10 @@ int main() {
 
        printWordCountToFile(wordCount, "output_table.txt");
        printCrossReferenceToFile(wordLocations, "cross_reference_table.txt");
+       extractAndWriteURLsToFile("text.txt", "urls.txt"); // Part 3
     } else {
         std::cerr << "Unable to open input file!" << std::endl;
     }
-
-    extractAndWriteURLsToFile("text.txt", "urls.txt");
 
     return 0;
 }
