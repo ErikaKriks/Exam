@@ -50,43 +50,54 @@ void printCrossReference(const std::map<std::string, std::vector<std::pair<int, 
     }
 }
 
+
 void printCrossReferenceToFile(const std::map<std::string, std::vector<std::pair<int, int>>> &wordLocations, const std::string &filename) {
     std::ofstream outputFile(filename);
     if (outputFile.is_open()) {
         int longestWordLength = 0; // Track the length of the longest word
-        for (const auto &word : wordLocations) {
-            if (word.first.length() > longestWordLength) {
-                longestWordLength = static_cast<int>(word.first.length());
-            }
-        }
+        bool wordsPrinted = false;
 
-        // Print the table header
-        outputFile << std::setw(longestWordLength + 2) << std::left << "Word" << " | Line - Count" << std::endl;
-        outputFile << std::setw(longestWordLength + 2 + 15) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
-
-        // Print word occurrences in a table
+        // Calculate the longest word length and print table for repeated words
         for (const auto &word : wordLocations) {
-            outputFile << std::setw(longestWordLength + 2) << std::left << word.first;
-            bool firstPair = true;
-            for (const auto &pair : word.second) {
-                if (!firstPair) {
-                    outputFile << ", ";
-                } else {
-                    firstPair = false;
+            if (word.second.size() > 1) {  // Check if the word has more than one occurrence
+                if (word.first.length() > longestWordLength) {
+                    longestWordLength = static_cast<int>(word.first.length());
                 }
-                outputFile << pair.first << "-" << pair.second;
+
+                if (!wordsPrinted) {
+                    // Print the table header
+                    outputFile << std::setw(longestWordLength + 2) << std::left << "Word" << " | Line - Count" << std::endl;
+                    outputFile << std::setw(longestWordLength + 2 + 15) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+                    wordsPrinted = true;
+                }
+
+                // Print word occurrences in a table
+                outputFile << std::setw(longestWordLength + 2) << std::left << word.first;
+                bool firstPair = true;
+                for (const auto &pair : word.second) {
+                    if (!firstPair) {
+                        outputFile << ", ";
+                    } else {
+                        firstPair = false;
+                    }
+                    outputFile << pair.first << "-" << pair.second;
+                }
+                outputFile << std::endl;
             }
-            outputFile << std::endl;
         }
 
-        // Print the table footer
-        outputFile << std::setw(longestWordLength + 2 + 15) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
-
-        std::cout << "Cross-reference written to file '" << filename << "'" << std::endl;
+        if (wordsPrinted) {
+            // Print the table footer
+            outputFile << std::setw(longestWordLength + 2 + 15) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
+            std::cout << "Cross-reference written to file '" << filename << "'" << std::endl;
+        } else {
+            std::cout << "No words repeated more than once." << std::endl;
+        }
     } else {
         std::cerr << "Unable to open output file!" << std::endl;
     }
 }
+
 
 void printWordCountToFile(const std::map<std::string, int> &wordCount, const std::string &filename) {
     std::ofstream outputFile(filename);
